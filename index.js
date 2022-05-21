@@ -72,6 +72,11 @@ async function run() {
         res.send({ result, token });
       });
 
+      app.get("users", async (req, res) => {
+        const users = await userCollection.find().toArray();
+        res.send(users);
+      });
+
       app.get("/available", async (req, res) => {
         const date = req.query.date;
         const services = await serviceCollection.find().toArray();
@@ -96,7 +101,6 @@ async function run() {
 
       app.get("/booking", verifyJWT, async (req, res) => {
         const patient = req.query.patient;
-        const authorization = req.headers.authorization;
         const decodedEmail = req.decoded.email;
         if (patient === decodedEmail) {
           const query = { patient: patient };
